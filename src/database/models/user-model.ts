@@ -1,8 +1,10 @@
+
 import mongoose, { Document, Schema } from "mongoose";
 
 interface IUser extends Document {
   id: string;
-  userName: string;
+  username: string;
+  birthDay: string;
   email: string;
   createdAt: Date;
   updatedAt?: Date;
@@ -21,10 +23,11 @@ const userSchema = new Schema<IUser>(
       lowercase: true,
       index: true,
     },
-    userName: {
+    username: {
       type: String,
       required: true,
-    }    
+    },
+    birthDay: String
   },
   {
     toJSON: { 
