@@ -1,6 +1,7 @@
 import Container, { Service } from 'typedi'
 import { Request, Response } from 'express'
 import { UserLogic } from '../logic'
+import { objectIdValidator } from './validators'
 
 @Service()
 export class UserController {
@@ -10,7 +11,9 @@ export class UserController {
   }  
   
   static async findOne(req: Request, res: Response) {
-    const { id } = req.params // TODO: Validar ID
+    const { error } = objectIdValidator.validate(req.params)
+    
+    if (error) return res.status(400).json({ error: error.details })
 
     const userLogic = Container.get(UserLogic)
     return await userLogic.findOne(req, res)
