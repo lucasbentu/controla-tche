@@ -16,9 +16,6 @@ export class UserRepository {
   }
 
   public async create(userDto: any) {
-    return UserModel.create({
-      userName: userDto.userName,
-      email: userDto.email,
-    })
+    return UserModel.create(userDto)
   }
 }

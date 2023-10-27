@@ -33,28 +33,31 @@ export class AuthLogic {
       return res.status(200).json({ token })
     } catch (error) {
       console.error(error)
+      res.status(500).json({ error });
     }
   } 
   
   public async register(req: Request, res: Response): Promise<any> {
     try {
-      const { userName, email, password } = req.body
-      
+      const { username, birthDay, email, password } = req.body
+
       const hasUserSameEmail = await this.userRepository.getUserByEmail(email)
 
       if(hasUserSameEmail) {
         res.status(409).json({ message: 'This user already exist.' });
       }
-      
+
       const passwordHash = await hash(password, 6)
 
-      await this.authRepository.create(email, passwordHash)
-
-      const user = await this.userRepository.create({ userName, email})
+      const [_, user] = await Promise.all([
+        this.authRepository.create(email, passwordHash),
+        this.userRepository.create({ username, birthDay, email })
+      ])
 
       return res.status(200).json({ user })
     } catch (error) {
       console.error(error)
+      res.status(500).json({ error });
     }
   }
 }
