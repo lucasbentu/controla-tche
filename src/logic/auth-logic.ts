@@ -4,6 +4,7 @@ import { Service } from 'typedi'
 import jwt from 'jsonwebtoken'
 import { AuthRepository, UserRepository } from '../repository'
 import { AppEnvs } from '../configs'
+import { ConflictError } from '../middlewares/error-handler/errors'
 
 @Service()
 export class AuthLogic {
@@ -44,7 +45,7 @@ export class AuthLogic {
       const hasUserSameEmail = await this.userRepository.getUserByEmail(email)
 
       if(hasUserSameEmail) {
-        res.status(409).json({ message: 'This user already exist.' });
+        throw new ConflictError('This user already exist.')
       }
 
       const passwordHash = await hash(password, 6)
@@ -54,10 +55,10 @@ export class AuthLogic {
         this.userRepository.create({ username, birthDay, email })
       ])
 
-      return res.status(200).json({ user })
+      return { user }
     } catch (error) {
-      console.error(error)
-      res.status(500).json({ error });
+      console.error(error);
+      throw error
     }
   }
 }
