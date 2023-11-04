@@ -1,4 +1,4 @@
 TODO:
-- Criar um middle para tratar erros
-- Adicionar LOG
-- ADicionar TESTS
+- Adicionar log
+- Adicionar Testes
+- Adicionar Handler de Sucesso
