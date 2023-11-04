@@ -1,21 +1,34 @@
 import Container, { Service } from 'typedi'
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { UserLogic } from '../logic'
 import { objectIdValidator } from './validators'
+import { BadRequestError } from '../middlewares/error-handler/errors'
 
 @Service()
 export class UserController {
-  static async findAll(req: Request, res: Response) {
-    const userLogic = Container.get(UserLogic)
-    return await userLogic.findAll(req, res)
+  static async findAll(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const userLogic = Container.get(UserLogic)
+      const response =  await userLogic.findAll()
+  
+      return res.status(200).json(response)
+    } catch (error) {
+      next(error)
+    }
   }  
   
-  static async findOne(req: Request, res: Response) {
-    const { error } = objectIdValidator.validate(req.params)
-    
-    if (error) return res.status(400).json({ error: error.details })
-
-    const userLogic = Container.get(UserLogic)
-    return await userLogic.findOne(req, res)
+  static async findOne(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { error } = objectIdValidator.validate(req.params)
+      
+      if (error) throw new BadRequestError(error.message)
+  
+      const userLogic = Container.get(UserLogic)
+      const response = await userLogic.findOne(req.params)
+  
+      return res.status(200).json(response)
+    } catch (error) {
+      next(error)
+    }
   }
 }

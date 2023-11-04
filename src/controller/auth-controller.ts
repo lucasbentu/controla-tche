@@ -2,6 +2,7 @@ import Container, { Service } from 'typedi'
 import { NextFunction, Request, Response } from 'express'
 import { AuthLogic } from '../logic'
 import { loginValidator, registerValidator } from './validators'
+import { BadRequestError } from '../middlewares/error-handler/errors'
 
 @Service()
 export class AuthController {
@@ -9,11 +10,12 @@ export class AuthController {
     try {
       const { error } = loginValidator.validate(req.body)
     
-      if (error) return res.status(400).json({ error: error.details })
-      
+      if (error) throw new BadRequestError(error.message)
+
       const authLogic = Container.get(AuthLogic)
-      
-      return await authLogic.login(req, res)  
+      const response = await authLogic.login(req.body)
+
+      return res.status(200).json(response)
     } catch (error) {
       next(error)
     }
@@ -24,12 +26,12 @@ export class AuthController {
     try {
       const { error } = registerValidator.validate(req.body)
 
-    if (error) return res.status(400).json({ error: error.details })
+      if (error) throw new BadRequestError(error.message)
+      
+      const authLogic = Container.get(AuthLogic)
+      const response = await authLogic.register(req.body)
 
-    const authLogic = Container.get(AuthLogic)
-    const response = await authLogic.register(req, res)
-    
-    return res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       next(error)
     }
