@@ -8,25 +8,30 @@ export class UserLogic {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async findAll(_req: Request, res: Response): Promise<any> {
+  public async findAll(): Promise<any> {
     try {
       const users = await this.userRepository.findAll()
-
-      res.status(200).json({ users })
+      return { users }
     } catch (error) {
       console.error(error)
+      throw error
     }
   }  
   
-  public async findOne(req: Request, res: Response): Promise<any> {
+  public async findOne(params: any): Promise<any> {
     try {
-      const { id } = req.params
+      const { id } = params
 
       const user =  await this.userRepository.findOneUserById(id)
 
-      res.status(200).json({ user })
+      if (!user) {
+        return {}
+      }
+      
+      return { user }
     } catch (error) {
       console.error(error)
+      throw error
     }
   }
 }

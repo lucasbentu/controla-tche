@@ -4,7 +4,7 @@ import { Service } from 'typedi'
 import jwt from 'jsonwebtoken'
 import { AuthRepository, UserRepository } from '../repository'
 import { AppEnvs } from '../configs'
-import { ConflictError } from '../middlewares/error-handler/errors'
+import { ConflictError, UnauthorizedError } from '../middlewares/error-handler/errors'
 
 @Service()
 export class AuthLogic {
@@ -13,34 +13,34 @@ export class AuthLogic {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async login(req: Request, res: Response): Promise<any> {
+  public async login(body: any): Promise<any> {
     try {
-      const { email, password } = req.body
+      const { email, password } = body
 
       const userPassword = await this.authRepository.getPasswordByEmail(email)
 
       if(!userPassword) {
-        res.status(401).json({ message: 'Token not found.' });
+        throw new UnauthorizedError('Invalid Credentials.')
       }
 
       const doesPasswordMatches = await compare(password, userPassword.passwordHash)
 
       if (!doesPasswordMatches) {
-        res.status(401).json({ message: 'Token not found.' });
+        throw new UnauthorizedError('Invalid Credentials.')
       }
 
       const token = jwt.sign({ email: email }, AppEnvs.SECRET_JWT, { expiresIn: '1h' });
       
-      return res.status(200).json({ token })
+      return { token }
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error });
+      throw error
     }
   } 
   
-  public async register(req: Request, res: Response): Promise<any> {
+  public async register(body: any): Promise<any> {
     try {
-      const { username, birthDay, email, password } = req.body
+      const { username, birthDay, email, password } = body
 
       const hasUserSameEmail = await this.userRepository.getUserByEmail(email)
 
