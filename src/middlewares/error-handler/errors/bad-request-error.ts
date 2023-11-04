@@ -1,7 +1,7 @@
 import { BaseError } from "../base-error"
 
-export class NotFoundError extends BaseError {
+export class BadRequestError extends BaseError {
   constructor(message: string) {
-    super(404, message)
+    super(400, message)
   }
 }
