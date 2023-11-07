@@ -1,10 +1,10 @@
-import { Request, Response } from 'express'
 import { compare, hash } from 'bcryptjs'
 import { Service } from 'typedi'
 import jwt from 'jsonwebtoken'
 import { AuthRepository, UserRepository } from '../repository'
 import { AppEnvs } from '../configs'
 import { ConflictError, UnauthorizedError } from '../middlewares/error-handler/errors'
+import { LoginDto, RegisterDto, RegisterResponse } from './dtos'
 
 @Service()
 export class AuthLogic {
@@ -13,9 +13,9 @@ export class AuthLogic {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async login(body: any): Promise<any> {
+  public async login(userCredentials: LoginDto): Promise<{ token: string }> {
     try {
-      const { email, password } = body
+      const { email, password } = userCredentials
 
       const userPassword = await this.authRepository.getPasswordByEmail(email)
 
@@ -38,9 +38,9 @@ export class AuthLogic {
     }
   } 
   
-  public async register(body: any): Promise<any> {
+  public async register(userCredentials: RegisterDto): Promise<RegisterResponse> {
     try {
-      const { username, birthDay, email, password } = body
+      const { username, birthDay, email, password } = userCredentials
 
       const hasUserSameEmail = await this.userRepository.getUserByEmail(email)
 
@@ -50,12 +50,12 @@ export class AuthLogic {
 
       const passwordHash = await hash(password, 6)
 
-      const [_, user] = await Promise.all([
+      const [_, userRegistred] = await Promise.all([
         this.authRepository.create(email, passwordHash),
         this.userRepository.create({ username, birthDay, email })
       ])
 
-      return { user }
+      return userRegistred
     } catch (error) {
       console.error(error);
       throw error

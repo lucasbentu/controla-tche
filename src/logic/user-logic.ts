@@ -1,6 +1,6 @@
-import { Request, Response } from 'express'
 import { UserRepository } from '../repository'
 import { Service } from 'typedi'
+import { UserResponseDto } from './dtos'
 
 @Service()
 export class UserLogic {
@@ -8,27 +8,27 @@ export class UserLogic {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async findAll(): Promise<any> {
+  public async findAll(): Promise<UserResponseDto[]> {
     try {
       const users = await this.userRepository.findAll()
-      return { users }
+      return users
     } catch (error) {
       console.error(error)
       throw error
     }
   }  
   
-  public async findOne(params: any): Promise<any> {
+  public async findOne(params: { id: string}): Promise<UserResponseDto | null > {
     try {
       const { id } = params
 
       const user =  await this.userRepository.findOneUserById(id)
 
       if (!user) {
-        return {}
+        return null
       }
       
-      return { user }
+      return user
     } catch (error) {
       console.error(error)
       throw error

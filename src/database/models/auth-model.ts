@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-interface IAuth extends Document {
+export interface IAuth extends Document {
   id: string;
   email: string;
   passwordHash: string;
