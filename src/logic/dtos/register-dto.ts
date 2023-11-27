@@ -1,11 +1,10 @@
 import { ObjectId } from 'mongodb'
 
-
 export interface RegisterDto {
-  username: string
-  birthDay: string
-  email: string
-  password: string
+  username: Readonly<string>
+  birthDay?: string
+  email: Readonly<string>
+  password: Readonly<string>
 }
 
 export interface RegisterResponse extends Omit<RegisterDto, 'password'> {

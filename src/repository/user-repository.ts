@@ -1,5 +1,6 @@
 import { Service } from 'typedi'
 import { IUser, UserModel } from '../database/models'
+import { UserDto } from '../shared/dtos'
 
 @Service()
 export class UserRepository {
@@ -15,7 +16,7 @@ export class UserRepository {
     return UserModel.findOne({ email })
   }
 
-  public async create(userDto: any): Promise<IUser> {
+  public async create(userDto: UserDto): Promise<IUser> {
     return UserModel.create(userDto)
   }
 }
