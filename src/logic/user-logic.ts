@@ -1,6 +1,7 @@
+import { ParamsDictionary } from 'express-serve-static-core'
 import { UserRepository } from '../repository'
 import { Service } from 'typedi'
-import { UserResponseDto } from './dtos'
+import { UserResponseDto } from '../shared/dtos'
 
 @Service()
 export class UserLogic {
@@ -18,7 +19,7 @@ export class UserLogic {
     }
   }  
   
-  public async findOne(params: { id: string}): Promise<UserResponseDto | null > {
+  public async findOne(params: ParamsDictionary): Promise<UserResponseDto | null > {
     try {
       const { id } = params
 
