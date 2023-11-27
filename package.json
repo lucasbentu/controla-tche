@@ -1,11 +1,12 @@
 {
   "name": "conect-flow",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "build/index.js",
   "author": "Lucas Krolikowski Bento",
   "license": "MIT",
   "scripts": {
-    "start": "node ./dist/index.js"
+    "start": "node ./build/index.js",
+    "build": "npx tsc"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.4",
