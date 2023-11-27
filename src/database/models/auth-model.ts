@@ -10,10 +10,6 @@ export interface IAuth extends Document {
 
 const authSchema = new Schema<IAuth>(
   {
-    _id: {
-      type: Schema.Types.ObjectId,
-      default: new mongoose.Types.ObjectId(),
-    },
     email: {
       type: String,
       required: true,
