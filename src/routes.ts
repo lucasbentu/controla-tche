@@ -4,6 +4,8 @@ import { verifyToken } from './middlewares'
 
 const router = Router()
 
+router.get('/v1/health-check', (_req, res) => res.status(200).send({ message: 'Ok'}))
+
 router.post('/v1/login', AuthController.login)
 router.post('/v1/register', AuthController.register)
 
