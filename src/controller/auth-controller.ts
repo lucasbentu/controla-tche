@@ -1,8 +1,9 @@
 import Container, { Service } from 'typedi'
 import { NextFunction, Request, Response } from 'express'
 import { AuthLogic } from '../logic'
-import { loginValidator, registerValidator } from './validators'
+import { loginValidator, registerValidator } from './validators/auth'
 import { BadRequestError } from '../middlewares/error-handler/errors'
+import { HttpStatusCode } from '../configs'
 
 @Service()
 export class AuthController {
@@ -15,11 +16,10 @@ export class AuthController {
       const authLogic = Container.get(AuthLogic)
       const response = await authLogic.login(req.body)
 
-      return res.status(200).json(response)
+      return res.status(HttpStatusCode.OK).json(response)
     } catch (error) {
       next(error)
     }
-    
   }  
   
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -31,7 +31,7 @@ export class AuthController {
       const authLogic = Container.get(AuthLogic)
       const response = await authLogic.register(req.body)
 
-      return res.status(200).json(response)
+      return res.status(HttpStatusCode.OK).json(response)
     } catch (error) {
       next(error)
     }

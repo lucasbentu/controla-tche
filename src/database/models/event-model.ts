@@ -2,29 +2,26 @@
 import { ObjectId } from "mongodb";
 import mongoose, { Document, Schema } from "mongoose";
 
-export interface IUser extends Document {
+export interface IEvent extends Document {
   id: ObjectId;
-  userName: string;
-  birthDay: string;
-  email: string;
+  title: string;
+  createdBy: string;
+  updatedBy: string;
   createdAt: Date;
   updatedAt?: Date;
 }
 
-const userSchema = new Schema<IUser>(
+const eventSchema = new Schema<IEvent>(
   {
-    email: {
+    title: {
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
+      uppercase: true,
       index: true,
     },
-    userName: {
-      type: String,
-      required: true,
-    },
-    birthDay: String
+    createdBy: String,
+    updatedBy: String,
   },
   {
     toJSON: { 
@@ -34,9 +31,9 @@ const userSchema = new Schema<IUser>(
         delete ret.__v;
       },
     },
-    collection: 'users',
+    collection: 'events',
     timestamps: true,
   }
 );
 
-export const UserModel = mongoose.model<IUser>("User", userSchema);
+export const EventModel = mongoose.model<IEvent>("Event", eventSchema);

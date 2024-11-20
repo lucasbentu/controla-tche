@@ -1,7 +1,7 @@
 import { ParamsDictionary } from 'express-serve-static-core'
 import { UserRepository } from '../repository'
 import { Service } from 'typedi'
-import { UserResponseDto } from '../shared/dtos'
+import { FilterUserDto, PaginationDto, UserDto, UserResponseDto } from '../shared/dtos'
 
 @Service()
 export class UserLogic {
@@ -9,10 +9,9 @@ export class UserLogic {
     private readonly userRepository: UserRepository
   ) {}
 
-  public async findAll(): Promise<UserResponseDto[]> {
+  public async findAll(pagination: PaginationDto<UserDto, FilterUserDto> = {}): Promise<PaginationDto<UserDto, FilterUserDto>>  {
     try {
-      const users = await this.userRepository.findAll()
-      return users
+      return await this.userRepository.findAll(pagination)
     } catch (error) {
       console.error(error)
       throw error

@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "./error-handler/errors";
 import { AppEnvs } from "../configs";
 import jwt from 'jsonwebtoken'
+import { UserPayloadDto } from "../shared/dtos";
+import { Session } from "./session";
 
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization;
@@ -15,7 +17,8 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
       throw new UnauthorizedError('Invalid Token.')
     }
 
-    req.body.user = payload;
+    Session.user = payload as UserPayloadDto
+    
     next();
   });
 }

@@ -1,12 +1,39 @@
 import { Service } from 'typedi'
 import { IUser, UserModel } from '../database/models'
-import { UserDto } from '../shared/dtos'
+import { FilterUserDto, PaginationDto, UserDto } from '../shared/dtos'
 
 @Service()
 export class UserRepository {
-  public async findAll(): Promise<IUser[]> {
-    return UserModel.find()
-  } 
+  public async findAll(pagination: PaginationDto<UserDto, FilterUserDto> = {}): Promise<PaginationDto<UserDto, FilterUserDto>> {
+    pagination.skip = pagination.skip || 0, 
+    pagination.limit = pagination.limit || 10,
+    pagination.filter = pagination.filter || {}
+
+    const filter = this.createFilter(pagination.filter)
+
+    pagination.data = await UserModel
+      .find(filter)
+      .limit(pagination.limit)
+      .skip(pagination.skip);
+      
+    pagination.total = await UserModel.countDocuments(filter);
+
+    return pagination;
+  }
+
+  private createFilter(filter: FilterUserDto = {}) {
+    let where = {}
+
+    if (filter?.userName) {
+      where = { ...where, userName: { $regex: `.*${filter.userName}.*`, $options: 'i' } };
+    }
+    
+    if (filter?.email) {
+      where = { ...where, email: { $regex: `.*${filter.email}.*`, $options: 'i' } };
+    }
+
+    return where 
+  }
   
   public async findOneUserById(id: string): Promise<IUser | null> {
     return UserModel.findOne({ _id: id })

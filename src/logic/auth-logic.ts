@@ -4,7 +4,8 @@ import jwt from 'jsonwebtoken'
 import { AuthRepository, UserRepository } from '../repository'
 import { AppEnvs } from '../configs'
 import { ConflictError, UnauthorizedError } from '../middlewares/error-handler/errors'
-import { LoginDto, RegisterDto, RegisterResponse } from './dtos'
+import type { LoginDto, RegisterDto, RegisterResponse } from './dtos'
+import type { UserPayloadDto } from '../shared/dtos'
 
 @Service()
 export class AuthLogic {
@@ -28,8 +29,12 @@ export class AuthLogic {
       if (!doesPasswordMatches) {
         throw new UnauthorizedError('Invalid Credentials.')
       }
+      
+      const payLoad: UserPayloadDto = {
+        email: email
+      }
 
-      const token = jwt.sign({ email: email }, AppEnvs.SECRET_JWT, { expiresIn: '1h' });
+      const token = jwt.sign(payLoad, AppEnvs.SECRET_JWT, { expiresIn: '1h' });
       
       return { token }
     } catch (error) {
@@ -40,7 +45,7 @@ export class AuthLogic {
   
   public async register(userCredentials: RegisterDto): Promise<RegisterResponse> {
     try {
-      const { username, birthDay, email, password } = userCredentials
+      const { userName, birthDay, email, password } = userCredentials
 
       const hasUserSameEmail = await this.userRepository.getUserByEmail(email)
 
@@ -52,7 +57,7 @@ export class AuthLogic {
 
       const [_, userRegistred] = await Promise.all([
         this.authRepository.create(email, passwordHash),
-        this.userRepository.create({ username, birthDay, email })
+        this.userRepository.create({ userName, birthDay, email })
       ])
 
       return userRegistred

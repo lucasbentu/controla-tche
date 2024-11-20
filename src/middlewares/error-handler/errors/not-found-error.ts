@@ -1,8 +1,8 @@
 import { HttpStatusCode } from "../../../configs"
 import { BaseError } from "../base-error"
 
-export class UnauthorizedError extends BaseError {
+export class NotFoundError extends BaseError {
   constructor(message: string) {
-    super(HttpStatusCode.UNAUTHORIZED, message)
+    super(HttpStatusCode.NOT_FOUND, message)
   }
 }
