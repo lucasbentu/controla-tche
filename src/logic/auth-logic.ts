@@ -55,12 +55,12 @@ export class AuthLogic {
 
       const passwordHash = await hash(password, 6)
 
-      const [_, userRegistred] = await Promise.all([
+      const [_, userRegistered] = await Promise.all([
         this.authRepository.create(email, passwordHash),
         this.userRepository.create({ userName, birthDay, email })
       ])
 
-      return userRegistred
+      return userRegistered
     } catch (error) {
       console.error(error);
       throw error
