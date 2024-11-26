@@ -4,22 +4,40 @@ import mongoose, { Document, Schema } from "mongoose";
 
 export interface IEvent extends Document {
   id: ObjectId;
-  title: string;
-  createdBy: string;
-  updatedBy: string;
+  eventName: string
+  eventDate: Date
+  estimatedParticipants: number
+  averageFee: number
+  company: string
+  responsible: string
+  email: string
+  phone: number
+  dateSubscribedStart: Date
+  dateSubscribedEnd: Date
+  createdBy: string
+  updatedBy?: string
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date;
 }
 
 const eventSchema = new Schema<IEvent>(
   {
-    title: {
+    eventName: {
       type: String,
       required: true,
       unique: true,
       uppercase: true,
       index: true,
     },
+    eventDate: Date,
+    estimatedParticipants: Number,
+    averageFee: Number,
+    company: String,
+    responsible: String,
+    email: String,
+    phone: String,
+    dateSubscribedStart: Date,
+    dateSubscribedEnd: Date,
     createdBy: String,
     updatedBy: String,
   },

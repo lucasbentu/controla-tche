@@ -27,10 +27,11 @@ export class EventLogic {
   public async update(id: string, partialEvent: Partial<EventDto>): Promise<EventResponseDto> {
     try {
       const event = await this.eventRepository.findOneById(id)
-
+      
       if (!event) throw new NotFoundError(`Event id: ${id} not found`)
 
       partialEvent.updatedBy = Session.user ? Session.user.email : 'user not logged'
+      
       return await this.eventRepository.update(id, partialEvent) as EventResponseDto
     } catch (error) {
       console.error(error)
@@ -40,10 +41,12 @@ export class EventLogic {
 
   public async create(eventDto: EventDto): Promise<EventResponseDto> {
     try {
-      const event = await this.eventRepository.findOne({ title: eventDto.title })
+      const event = await this.eventRepository.findOne({ eventName: eventDto.eventName })
+
       if (event) throw new ConflictError('Event already exists')
         
       eventDto.createdBy = Session.user ? Session.user.email : 'user not logged'
+
       return await this.eventRepository.create(eventDto)
     } catch (error) {
       console.error(error)
