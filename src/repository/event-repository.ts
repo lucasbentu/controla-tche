@@ -35,7 +35,7 @@ export class EventRepository {
     return EventModel.findById(id)
   }
 
-  public async findOne(filter: FilterEventDto = {}): Promise<EventResponseDto | null> {
+  public async findOne(filter: Partial<EventDto> = {}): Promise<EventResponseDto | null> {
     return EventModel.findOne(filter)
   }
   
