@@ -1,8 +1,7 @@
 import Joi from 'joi'
-
-const idValidator = Joi.string().required().regex(/^[0-9a-fA-F]{24}$/).message('Must be a MongoDB ID');
+import { MONGODB_ID } from './regex-validator'
 
 export const objectIdValidator = Joi.object({
-    id: idValidator
+    id: Joi.string().required().regex(MONGODB_ID).message('Must be a MongoDB ID')
 })
 
