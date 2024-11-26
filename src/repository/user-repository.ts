@@ -24,8 +24,8 @@ export class UserRepository {
   private createFilter(filter: FilterUserDto = {}) {
     let where = {}
 
-    if (filter?.userName) {
-      where = { ...where, userName: { $regex: `.*${filter.userName}.*`, $options: 'i' } };
+    if (filter?.fullName) {
+      where = { ...where, fullName: { $regex: `.*${filter.fullName}.*`, $options: 'i' } };
     }
     
     if (filter?.email) {

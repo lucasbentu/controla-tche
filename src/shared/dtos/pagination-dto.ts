@@ -1,7 +1,7 @@
 export type PaginationDto<T, F> = {
-  limit?: number,
   skip?: number,
-  total?: number
+  limit?: number,
   filter?: F,
   data?: T[],
+  total?: number
 }

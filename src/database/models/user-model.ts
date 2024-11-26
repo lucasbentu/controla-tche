@@ -4,11 +4,14 @@ import mongoose, { Document, Schema } from "mongoose";
 
 export interface IUser extends Document {
   id: ObjectId;
-  userName: string;
-  birthDay: string;
+  fullName: string;
+  birthDate?: Date;
   email: string;
+  personalDocument: number;
+  createdBy: string;
+  updatedBy?: string;
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -20,11 +23,23 @@ const userSchema = new Schema<IUser>(
       lowercase: true,
       index: true,
     },
-    userName: {
+    fullName: {
       type: String,
       required: true,
     },
-    birthDay: String
+    personalDocument: {
+      type: Number,
+      required: true,
+    },
+    createdBy: {
+      type: String,
+      required: true,
+    },
+    updatedBy: {
+      type: String,
+      default: null,
+    },
+    birthDate: Date
   },
   {
     toJSON: { 

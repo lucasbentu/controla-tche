@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken'
 import { AuthRepository, UserRepository } from '../repository'
 import { AppEnvs } from '../configs'
 import { ConflictError, UnauthorizedError } from '../middlewares/error-handler/errors'
-import type { LoginDto, RegisterDto, RegisterResponse } from './dtos'
-import type { UserPayloadDto } from '../shared/dtos'
+import type { LoginDto } from './dtos'
+import type { UserPayloadDto, UserRegisterDto, UserResponseDto } from '../shared/dtos'
 
 @Service()
 export class AuthLogic {
@@ -43,11 +43,11 @@ export class AuthLogic {
     }
   } 
   
-  public async register(userCredentials: RegisterDto): Promise<RegisterResponse> {
+  public async register(userCredentials: UserRegisterDto): Promise<UserResponseDto> {
     try {
-      const { userName, birthDay, email, password } = userCredentials
+      const { password, ...user } = userCredentials
 
-      const hasUserSameEmail = await this.userRepository.getUserByEmail(email)
+      const hasUserSameEmail = await this.userRepository.getUserByEmail(user.email)
 
       if(hasUserSameEmail) {
         throw new ConflictError('This user already exist.')
@@ -55,9 +55,11 @@ export class AuthLogic {
 
       const passwordHash = await hash(password, 6)
 
+      user.createdBy = 'admin'
+
       const [_, userRegistered] = await Promise.all([
-        this.authRepository.create(email, passwordHash),
-        this.userRepository.create({ userName, birthDay, email })
+        this.authRepository.create(user.email, passwordHash),
+        this.userRepository.create(user)
       ])
 
       return userRegistered

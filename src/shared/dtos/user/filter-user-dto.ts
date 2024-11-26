@@ -1,4 +1,4 @@
 export type FilterUserDto = {
-  userName?: string
+  fullName?: string
   email?: string
 }
