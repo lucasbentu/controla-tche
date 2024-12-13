@@ -32,6 +32,23 @@ export class EventController {
     }
   }
 
+  static async findOne(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { error: errorId } = objectIdValidator.validate(req.params)
+
+      if (errorId) throw new BadRequestError(errorId.message)
+
+      const { id } = req.params
+
+      const eventLogic = Container.get(EventLogic)
+      const response =  await eventLogic.findOne(id)
+  
+      return res.status(HttpStatusCode.OK).json(response)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { error: errorId } = objectIdValidator.validate(req.params)
