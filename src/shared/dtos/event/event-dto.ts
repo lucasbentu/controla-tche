@@ -1,11 +1,11 @@
-import { ObjectId } from "mongodb";
-
 export type EventDto = {
   eventName: string
   eventDate: Date
   estimatedParticipants: number
   averageFee: number
   company: string
+  description?: string | null
+  bannerUrl?: string | null
   responsible: string
   email: string
   phone: number
@@ -16,7 +16,7 @@ export type EventDto = {
 }
 
 export type EventResponseDto = EventDto & {
-  id: ObjectId,
+  id: string,
   createdAt: Date,
   updatedAt: Date;
 }
