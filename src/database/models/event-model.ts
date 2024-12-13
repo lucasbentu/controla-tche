@@ -9,6 +9,8 @@ export interface IEvent extends Document {
   estimatedParticipants: number
   averageFee: number
   company: string
+  description: string | null
+  bannerUrl: string | null
   responsible: string
   email: string
   phone: number
@@ -26,13 +28,22 @@ const eventSchema = new Schema<IEvent>(
       type: String,
       required: true,
       unique: true,
-      uppercase: true,
       index: true,
     },
     eventDate: Date,
     estimatedParticipants: Number,
     averageFee: Number,
     company: String,
+    description: {
+      type: String,
+      default: null,
+      nullable: true
+    },
+    bannerUrl: {
+      type: String,
+      default: null,
+      nullable: true
+    },
     responsible: String,
     email: String,
     phone: String,
