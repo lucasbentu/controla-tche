@@ -24,6 +24,15 @@ export class EventLogic {
     }
   }
 
+  public async findOne(id: string): Promise<EventResponseDto | null> {
+    try {
+      return await this.eventRepository.findOneById(id)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
   public async update(id: string, partialEvent: Partial<EventDto>): Promise<EventResponseDto> {
     try {
       const event = await this.eventRepository.findOneById(id)
