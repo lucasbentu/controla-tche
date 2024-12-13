@@ -13,6 +13,7 @@ router.get('/v1/users', verifyToken, UserController.findAll)
 router.get('/v1/users/:id', verifyToken, UserController.findOne)
 
 router.get('/v1/events', verifyToken, EventController.findAll)
+router.get('/v1/events/:id', verifyToken, EventController.findOne)
 router.patch('/v1/events/:id', verifyToken, EventController.update)
 router.post('/v1/events', verifyToken, EventController.create)
 
