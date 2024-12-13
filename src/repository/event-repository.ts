@@ -1,6 +1,7 @@
 import { Service } from 'typedi'
 import { EventModel, IEvent } from '../database/models'
 import { EventDto, EventResponseDto, FilterEventDto, PaginationDto } from '../shared/dtos'
+import { ObjectId } from 'mongodb'
 
 @Service()
 export class EventRepository {
@@ -24,8 +25,8 @@ export class EventRepository {
   private createFilter(filter: FilterEventDto = {}) {
     let where = {}
 
-    if (filter?.title) {
-      where = { ...where, title: { $regex: `.*${filter.title}.*`, $options: 'i' } };
+    if (filter?.eventName) {
+      where = { ...where, eventName: { $regex: `.*${filter.eventName}.*`, $options: 'i' } };
     }
 
     return where 
@@ -35,7 +36,7 @@ export class EventRepository {
     return EventModel.findById(id)
   }
 
-  public async findOne(filter: Partial<EventDto> = {}): Promise<EventResponseDto | null> {
+  public async findOne(filter: Partial<EventResponseDto> = {}): Promise<EventResponseDto | null> {
     return EventModel.findOne(filter)
   }
   
