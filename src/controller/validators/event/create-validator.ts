@@ -7,6 +7,8 @@ export const createValidator = Joi.object({
   estimatedParticipants: Joi.number().required(),
   averageFee: Joi.number().required(),
   company: Joi.string().required(),
+  description: Joi.string(),
+  bannerUrl: Joi.string(),
   responsible: Joi.string().required(),
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: true } }).required(),
   phone: Joi.string().regex(ONLY_NUMBERS_REGEX).message('phone allow only numbers.').required(),

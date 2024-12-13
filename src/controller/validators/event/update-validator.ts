@@ -7,10 +7,11 @@ export const updateValidator = Joi.object({
   estimatedParticipants: Joi.number(),
   averageFee: Joi.number(),
   company: Joi.string(),
+  description: Joi.string(),
+  bannerUrl: Joi.string(),
   responsible: Joi.string(),
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: true } }),
   phone: Joi.string().regex(ONLY_NUMBERS_REGEX).message('phone allow only numbers.'),
   dateSubscribedStart: Joi.string().regex(DATE_REGEX).message('dateSubscribedStart must be YYYY-MM-DD.'),
   dateSubscribedEnd: Joi.string().regex(DATE_REGEX).message('dateSubscribedEnd must be YYYY-MM-DD.'),
 })
-
